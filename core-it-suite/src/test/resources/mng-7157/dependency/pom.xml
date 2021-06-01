@@ -1,0 +1,15 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <name>Maven Integration Test Dependency :: it7157</name>
+  <groupId>org.apache.maven.its.it7157</groupId>
+  <artifactId>maven-it-it7157-dependency</artifactId>
+  <description>Project that brings in a newer version of maven-core-it-support.</description>
+  <version>1.0</version>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.its</groupId>
+      <artifactId>maven-core-it-support</artifactId>
+      <version>1.1</version>
+    </dependency>
+  </dependencies>
+</project>
