@@ -4,7 +4,6 @@ import org.apache.maven.it.util.ResourceExtractor;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Properties;
 
 /**
  * This is a test set for <a href="https://issues.apache.org/jira/browse/MNG-6071">MNG-6071</a>:
@@ -15,7 +14,7 @@ public class MavenITmng6071GetResourceWithCustomPom
 {
     public MavenITmng6071GetResourceWithCustomPom()
     {
-        super( "[4.0.0-alpha-1,)" );
+        super( "[3.8.2,)" );
     }
 
     /**

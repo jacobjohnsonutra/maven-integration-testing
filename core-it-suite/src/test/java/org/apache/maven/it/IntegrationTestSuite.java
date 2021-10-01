@@ -106,6 +106,11 @@ public class IntegrationTestSuite
         // Tests that don't run stable and need to be fixed
         // -------------------------------------------------------------------------------------------------------------
         // suite.addTestSuite( MavenIT0108SnapshotUpdateTest.class ); -- MNG-3137
+        suite.addTestSuite( MavenITmng4463DependencyManagementImportVersionRanges.class );
+        suite.addTestSuite( MavenITmng7112ProjectsWithNonRecursiveTest.class );
+        suite.addTestSuite( MavenITmng7128BlockExternalHttpReactorTest.class );
+        suite.addTestSuite( MavenITmng6511OptionalProjectSelectionTest.class );
+        suite.addTestSuite( MavenITmng7110ExtensionClassloader.class );
         suite.addTestSuite( MavenITmng7051OptionalProfileActivationTest.class );
         suite.addTestSuite( MavenITmng6957BuildConsumer.class );
         suite.addTestSuite( MavenITmng7045DropUselessAndOutdatedCdiApiTest.class );
@@ -113,7 +118,8 @@ public class IntegrationTestSuite
         suite.addTestSuite( MavenITmng6754TimestampInMultimoduleProject.class );
         suite.addTestSuite( MavenITmng6981ProjectListShouldIncludeChildrenTest.class );
         suite.addTestSuite( MavenITmng6972AllowAccessToGraphPackageTest.class );
-        suite.addTestSuite( MavenITmng6772NestedImportScopeRepositoryOverride.class );
+        // This IT has been disabled until it is decided how the solution shall look like
+        // suite.addTestSuite( MavenITmng6772NestedImportScopeRepositoryOverride.class );
         suite.addTestSuite( MavenITmng6759TransitiveDependencyRepositoriesTest.class );
         suite.addTestSuite( MavenITmng6720FailFastTest.class );
         suite.addTestSuite( MavenITmng6656BuildConsumer.class );

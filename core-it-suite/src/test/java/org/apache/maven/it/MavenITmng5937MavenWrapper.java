@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,23 +55,34 @@ public class MavenITmng5937MavenWrapper
     {
         super( "[4.0.0-alpha-1,)" );
 
-        String localRepo = System.getProperty("maven.repo.local");
-
         envVars = new HashMap<>( 4 );
-        envVars.put( "MVNW_REPOURL", Paths.get( localRepo ).toUri().toURL().toString() );
-        envVars.put( "MVNW_VERBOSE", "true" );
-        String javaHome = System.getenv( "JAVA_HOME" );
-        if ( javaHome != null )
+
+        if ( !isSkipped() )
         {
-            // source needs to call the javac executable.
-            // if JAVA_HOME is not set, ForkedLauncher sets it to java.home, which is the JRE home
-            envVars.put( "JAVA_HOME", javaHome );
+            String localRepo = System.getProperty( "maven.repo.local" );
+            if ( localRepo != null )
+            {
+                envVars.put( "MVNW_REPOURL", Paths.get( localRepo ).toUri().toURL().toString() );
+                envVars.put( "MVNW_VERBOSE", "true" );
+            }
+            String javaHome = System.getenv( "JAVA_HOME" );
+            if ( javaHome != null )
+            {
+                // source needs to call the javac executable.
+                // if JAVA_HOME is not set, ForkedLauncher sets it to java.home, which is the JRE home
+                envVars.put( "JAVA_HOME", javaHome );
+            }
         }
     }
 
     public void setUp()
         throws Exception
     {
+        if ( isSkipped() )
+        {
+            return;
+        }
+
         String mavenDist = System.getProperty( "maven.distro" );
         if ( StringUtils.isEmpty( mavenDist ) )
         {
@@ -101,8 +113,6 @@ public class MavenITmng5937MavenWrapper
 
         unpack( testDir.toPath(), "bin" );
 
-        envVars.put( "MAVEN_BASEDIR", testDir.getAbsolutePath() );
-
         Verifier verifier = newVerifier( testDir.getAbsolutePath() );
         verifier.setAutoclean( false );
         verifier.setDebug( true );
@@ -118,8 +128,6 @@ public class MavenITmng5937MavenWrapper
 
         unpack( testDir.toPath(), "script" );
 
-        envVars.put( "MAVEN_BASEDIR", testDir.getAbsolutePath() );
-
         Verifier verifier = newVerifier( testDir.getAbsolutePath() );
         verifier.setAutoclean( false );
         verifier.setDebug( true );
@@ -134,8 +142,6 @@ public class MavenITmng5937MavenWrapper
         final File testDir = baseDir.resolve( "source" ).toFile();
 
         unpack( testDir.toPath(), "source" );
-
-        envVars.put( "MAVEN_BASEDIR", testDir.getAbsolutePath() );
 
         Verifier verifier = newVerifier( testDir.getAbsolutePath() );
         verifier.setAutoclean( false );
@@ -153,10 +159,11 @@ public class MavenITmng5937MavenWrapper
         unpack( testDir.toPath(), "bin" );
 
         Path p = baseDir.resolve( "properties/.mvn/wrapper/maven-wrapper.properties" );
-        try ( BufferedWriter out = Files.newBufferedWriter( p, StandardOpenOption.TRUNCATE_EXISTING ) )
+        try ( BufferedWriter out = Files.newBufferedWriter( p, StandardCharsets.ISO_8859_1,
+                                                            StandardOpenOption.TRUNCATE_EXISTING ) )
         {
             String localRepo = System.getProperty("maven.repo.local");
-            out.append( "distributionUrl = " + Paths.get( localRepo ).toUri().toURL().toString() )
+            out.append( "distributionUrl = " + Paths.get( localRepo ).toUri().toASCIIString() )
                .append( "org/apache/maven/apache-maven/")
                .append( getMavenVersion().toString() )
                .append( "/apache-maven-")
@@ -165,7 +172,6 @@ public class MavenITmng5937MavenWrapper
         }
 
         envVars.remove( "MVNW_REPOURL" );
-        envVars.put( "MAVEN_BASEDIR", testDir.getAbsolutePath() );
 
         Verifier verifier = newVerifier( testDir.getAbsolutePath() );
         verifier.setAutoclean( false );

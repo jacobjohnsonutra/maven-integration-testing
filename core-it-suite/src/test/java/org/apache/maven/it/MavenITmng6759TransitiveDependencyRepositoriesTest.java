@@ -39,26 +39,31 @@ public class MavenITmng6759TransitiveDependencyRepositoriesTest extends Abstract
      * where C is in a non-Central repository should use B's {@literal <repositories>} to resolve C.
      */
     public void testTransitiveDependenciesAccountForRepositoriesListedByDependencyTrailPredecessor() throws Exception {
-        URI customRepoUri = installDependencyCInCustomRepo();
+        installDependencyCInCustomRepo();
         File testDir = ResourceExtractor.simpleExtractResources( getClass(), projectBaseDir );
 
         Verifier verifier = newVerifier( testDir.getAbsolutePath() );
 
-        verifier.addCliOption( "-Dcustom.repo.uri=" + customRepoUri );
         verifier.executeGoal( "package"  );
         verifier.verifyErrorFreeLog();
     }
 
-    private URI installDependencyCInCustomRepo() throws Exception {
+    private void installDependencyCInCustomRepo() throws Exception {
         File dependencyCProjectDir = ResourceExtractor.simpleExtractResources( getClass(), projectBaseDir + "/dependency-in-custom-repo" );
         URI customRepoUri = new File(new File(dependencyCProjectDir, "target" ), "repo" ).toURI();
         Verifier verifier = newVerifier( dependencyCProjectDir.getAbsolutePath() );
 
         verifier.deleteDirectory( "target" );
-        verifier.addCliOption( "-DaltDeploymentRepository=customRepo::" + customRepoUri );
+        if ( getMavenVersion().getMajorVersion() <= 3 )
+        {
+            verifier.addCliOption( "-DaltDeploymentRepository=customRepo::default::" + customRepoUri );
+        }
+        else
+        {
+            verifier.addCliOption( "-DaltDeploymentRepository=customRepo::" + customRepoUri );
+        }
         verifier.executeGoal( "deploy" );
         verifier.verifyErrorFreeLog();
-        return customRepoUri;
     }
 
 }
