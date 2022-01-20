@@ -1,0 +1,15 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.apache.maven.its.mng7003</groupId>
+    <artifactId>usage</artifactId>
+    <version>1</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven.its.mng7003</groupId>
+            <artifactId>module</artifactId>
+            <version>1</version>
+        </dependency>
+    </dependencies>
+</project>
